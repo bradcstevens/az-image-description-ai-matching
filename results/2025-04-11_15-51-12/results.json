@@ -1,0 +1,253 @@
+[
+  {
+    "description": "**TEXT DETECTED:** None visible in the image.  \n\n**UNMATCHED FRIED CHKN SNDWCH**  \n**Confidence score:** 8/10  \n**Description:** The food item depicted appears to be a fried chicken sandwich. The sandwich is made with a lightly toasted, round, soft bun. Inside, there are visible golden-brown, breaded and fried chicken pieces, along with thinly sliced pickles. The sandwich does not include cheese or any other visible fillings.\nVision API detected: burger",
+    "file_name": "ut7ypj07vyltot2.jpeg",
+    "confidence_boost": 0,
+    "synergy_notes": [
+      "Added Vision API food tags: burger"
+    ],
+    "analysis_methods": [
+      "openai",
+      "azure_vision"
+    ],
+    "openai_analysis": {
+      "description": "**TEXT DETECTED:** None visible in the image.  \n\n**UNMATCHED FRIED CHKN SNDWCH**  \n**Confidence score:** 8/10  \n**Description:** The food item depicted appears to be a fried chicken sandwich. The sandwich is made with a lightly toasted, round, soft bun. Inside, there are visible golden-brown, breaded and fried chicken pieces, along with thinly sliced pickles. The sandwich does not include cheese or any other visible fillings.",
+      "file_name": "ut7ypj07vyltot2.jpeg"
+    },
+    "vision_analysis": {
+      "caption": "a person holding a sandwich",
+      "caption_confidence": 0.7242224812507629,
+      "tags": [
+        {
+          "name": "food",
+          "confidence": 0.9933098554611206
+        },
+        {
+          "name": "person",
+          "confidence": 0.9899134635925293
+        },
+        {
+          "name": "fast food",
+          "confidence": 0.9820953607559204
+        },
+        {
+          "name": "bun",
+          "confidence": 0.9749106168746948
+        },
+        {
+          "name": "american food",
+          "confidence": 0.9447824358940125
+        },
+        {
+          "name": "snack",
+          "confidence": 0.9387643337249756
+        },
+        {
+          "name": "burger",
+          "confidence": 0.9374417066574097
+        },
+        {
+          "name": "bread",
+          "confidence": 0.9374020099639893
+        },
+        {
+          "name": "hamburger",
+          "confidence": 0.9154844284057617
+        },
+        {
+          "name": "sandwich",
+          "confidence": 0.9130630493164062
+        },
+        {
+          "name": "baked goods",
+          "confidence": 0.8900035619735718
+        },
+        {
+          "name": "junk food",
+          "confidence": 0.8768936395645142
+        },
+        {
+          "name": "fried food",
+          "confidence": 0.8543021082878113
+        },
+        {
+          "name": "slider",
+          "confidence": 0.8536891341209412
+        },
+        {
+          "name": "holding",
+          "confidence": 0.8464746475219727
+        },
+        {
+          "name": "hand",
+          "confidence": 0.822851836681366
+        },
+        {
+          "name": "snack food",
+          "confidence": 0.5960071086883545
+        },
+        {
+          "name": "indoor",
+          "confidence": 0.5326833128929138
+        }
+      ],
+      "objects": [
+        {
+          "name": "Hamburger",
+          "confidence": 0.741,
+          "bounding_box": {
+            "x": 372,
+            "y": 68,
+            "width": 762,
+            "height": 564
+          }
+        }
+      ],
+      "text": []
+    },
+    "match": "UNMATCHED FRIED CHKN SNDWCH",
+    "score": 0.5,
+    "confidence": 0.5,
+    "original_confidence": 0.5,
+    "synergy_boost": 0,
+    "is_explicit_unmatched": true,
+    "unmatched_reason": "AI explicitly marked as unmatched",
+    "match_filename": "UNMATCHED_FRIED_CHKN_SNDWCH_conf50.jpeg"
+  },
+  {
+    "description": "**TEXT DETECTED:** \"ROOST\"  \n**UNMATCHED FOOD CATEGORY:** UNMATCHED ROOST FOOD BOX  \n**Confidence score:** 3/10  \n**Description:** The image features a Roost-branded food box placed on the roof of a car. The food inside the box is not visible, making it impossible to specifically identify or match to a menu item. It's likely a container from Roost that could hold various food items, but without visible food, identification specificity is low.",
+    "file_name": "jt7rwt3h5oiru33.jpeg",
+    "confidence_boost": 0,
+    "synergy_notes": [],
+    "analysis_methods": [
+      "openai",
+      "azure_vision"
+    ],
+    "openai_analysis": {
+      "description": "**TEXT DETECTED:** \"ROOST\"  \n**UNMATCHED FOOD CATEGORY:** UNMATCHED ROOST FOOD BOX  \n**Confidence score:** 3/10  \n**Description:** The image features a Roost-branded food box placed on the roof of a car. The food inside the box is not visible, making it impossible to specifically identify or match to a menu item. It's likely a container from Roost that could hold various food items, but without visible food, identification specificity is low.",
+      "file_name": "jt7rwt3h5oiru33.jpeg"
+    },
+    "vision_analysis": {
+      "caption": "a man standing next to a car",
+      "caption_confidence": 0.8284376263618469,
+      "tags": [
+        {
+          "name": "vehicle",
+          "confidence": 0.9921717643737793
+        },
+        {
+          "name": "clothing",
+          "confidence": 0.9917674660682678
+        },
+        {
+          "name": "person",
+          "confidence": 0.9852669835090637
+        },
+        {
+          "name": "land vehicle",
+          "confidence": 0.9827715158462524
+        },
+        {
+          "name": "outdoor",
+          "confidence": 0.9812792539596558
+        },
+        {
+          "name": "tire",
+          "confidence": 0.9546250104904175
+        },
+        {
+          "name": "vehicle door",
+          "confidence": 0.9536116123199463
+        },
+        {
+          "name": "jeans",
+          "confidence": 0.9447128772735596
+        },
+        {
+          "name": "auto part",
+          "confidence": 0.9000363349914551
+        },
+        {
+          "name": "automotive exterior",
+          "confidence": 0.8977205753326416
+        },
+        {
+          "name": "wheel",
+          "confidence": 0.8955338001251221
+        },
+        {
+          "name": "motor vehicle",
+          "confidence": 0.8883439898490906
+        },
+        {
+          "name": "footwear",
+          "confidence": 0.8717219829559326
+        },
+        {
+          "name": "family car",
+          "confidence": 0.8519750833511353
+        },
+        {
+          "name": "standing",
+          "confidence": 0.635442316532135
+        },
+        {
+          "name": "ground",
+          "confidence": 0.6243119835853577
+        },
+        {
+          "name": "parked",
+          "confidence": 0.6106703877449036
+        },
+        {
+          "name": "car",
+          "confidence": 0.6028653383255005
+        }
+      ],
+      "objects": [
+        {
+          "name": "car",
+          "confidence": 0.855,
+          "bounding_box": {
+            "x": 19,
+            "y": 322,
+            "width": 665,
+            "height": 923
+          }
+        },
+        {
+          "name": "person",
+          "confidence": 0.785,
+          "bounding_box": {
+            "x": 543,
+            "y": 283,
+            "width": 293,
+            "height": 975
+          }
+        }
+      ],
+      "text": [
+        {
+          "text": "ROOST",
+          "confidence": 0.936
+        },
+        {
+          "text": "T2009",
+          "confidence": 0.846
+        },
+        {
+          "text": "1121",
+          "confidence": 0.845
+        }
+      ]
+    },
+    "match": "UNMATCHED FOOD CATEGORY",
+    "score": 0.4,
+    "confidence": 0.4,
+    "original_confidence": 0.4,
+    "synergy_boost": 0,
+    "is_explicit_unmatched": true,
+    "unmatched_reason": "AI explicitly marked as unmatched",
+    "match_filename": "UNMATCHED_FOOD_CATEGORY_conf40.jpeg"
+  }
+]
