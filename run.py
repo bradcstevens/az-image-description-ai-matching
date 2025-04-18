@@ -8,6 +8,8 @@ from tqdm import tqdm
 import argparse
 import json
 import shutil
+import subprocess
+import sys
 
 from app.config.settings import settings
 from app.core.azure_openai import AzureOpenAIService
@@ -16,7 +18,8 @@ from app.core.image_analyzer import ImageAnalyzer
 from app.utils.file_utils import (
     load_descriptions_from_file,
     create_timestamped_directory,
-    ensure_directory_exists
+    ensure_directory_exists,
+    validate_image_file
 )
 
 
@@ -61,6 +64,36 @@ def parse_arguments():
         help="Process only a sample of N images (default: process all)"
     )
     return parser.parse_args()
+
+
+def run_git_lfs_pull():
+    """
+    Attempt to run git lfs pull to retrieve actual images.
+    
+    Returns:
+        Tuple of (success, message) where success is a boolean indicating if the
+        command was successful, and message is any error message if not.
+    """
+    try:
+        # First check if git lfs is installed
+        subprocess.run(["git", "lfs", "--version"], 
+                     check=True, 
+                     stdout=subprocess.PIPE, 
+                     stderr=subprocess.PIPE)
+        
+        # Run git lfs pull
+        result = subprocess.run(["git", "lfs", "pull"], 
+                             check=True, 
+                             stdout=subprocess.PIPE, 
+                             stderr=subprocess.PIPE)
+        
+        return True, f"Successfully pulled LFS files: {result.stdout.decode('utf-8')}"
+    except subprocess.CalledProcessError as e:
+        return False, f"Git LFS command failed: {e.stderr.decode('utf-8')}"
+    except FileNotFoundError:
+        return False, "Git LFS is not installed on your system"
+    except Exception as e:
+        return False, f"Unexpected error running Git LFS: {str(e)}"
 
 
 def main():
@@ -127,6 +160,50 @@ def main():
             print(f"No images found matching pattern {image_pattern}")
             return
         
+        # Check for Git LFS pointers and provide warning
+        lfs_pointer_count = 0
+        for image_path in image_paths[:5]:  # Check first few files
+            is_valid, _ = validate_image_file(image_path)
+            if not is_valid:
+                lfs_pointer_count += 1
+        
+        if lfs_pointer_count > 0:
+            print("\n⚠️ Detected Git LFS pointer files instead of actual images.")
+            print("Attempting to automatically pull LFS files...")
+            
+            # Try to run git lfs pull automatically
+            success, message = run_git_lfs_pull()
+            
+            if success:
+                print(f"✓ {message}")
+                print("Checking if images are now properly downloaded...")
+                
+                # Recheck the same files to see if they're now valid
+                lfs_pointer_count_after = 0
+                for image_path in image_paths[:5]:
+                    is_valid, _ = validate_image_file(image_path)
+                    if not is_valid:
+                        lfs_pointer_count_after += 1
+                
+                if lfs_pointer_count_after == 0:
+                    print("✓ Successfully downloaded all LFS images!")
+                else:
+                    print(f"⚠️ There are still {lfs_pointer_count_after} LFS pointer files.")
+                    show_lfs_instructions()
+                    
+                    # Ask for confirmation to continue
+                    if input("Continue anyway? (y/n): ").lower() != 'y':
+                        print("Exiting at user request.")
+                        return
+            else:
+                print(f"✗ {message}")
+                show_lfs_instructions()
+                
+                # Ask for confirmation to continue
+                if input("Continue anyway? (y/n): ").lower() != 'y':
+                    print("Exiting at user request.")
+                    return
+        
         # Limit to a sample if specified
         if args.sample > 0 and args.sample < len(image_paths):
             print(f"Limiting to a sample of {args.sample} images")
@@ -139,7 +216,20 @@ def main():
         
         # Process each image
         results = []
+        invalid_image_count = 0
         for image_path in tqdm(image_paths, desc="Analyzing images"):
+            # Validate the image file first
+            is_valid, error_message = validate_image_file(image_path)
+            if not is_valid:
+                print(f"Skipping invalid image {image_path}: {error_message}")
+                invalid_image_count += 1
+                # Add a minimal error result
+                results.append({
+                    "file_name": os.path.basename(image_path),
+                    "error": error_message
+                })
+                continue
+            
             # Analyze the image
             try:
                 analysis_result = image_analyzer.analyze_image(image_path)
@@ -174,17 +264,35 @@ def main():
         
         # Print summary statistics
         matched_count = sum(1 for r in results if r.get("match") and not r.get("match", "").startswith("UNMATCHED"))
-        unmatched_count = len(results) - matched_count
+        unmatched_count = len(results) - matched_count - invalid_image_count
         
         print(f"\nAnalysis complete!")
         print(f"Total images processed: {len(results)}")
+        print(f"Invalid images (skipped): {invalid_image_count}")
         print(f"Matched items: {matched_count}")
         print(f"Unmatched items: {unmatched_count}")
-        if len(results) > 0:
-            print(f"Match rate: {matched_count / len(results) * 100:.1f}%")
+        if len(results) > invalid_image_count:
+            print(f"Match rate: {matched_count / (len(results) - invalid_image_count) * 100:.1f}%")
+        
+        # Add Git LFS reminder if there were invalid images
+        if invalid_image_count > 0:
+            print("\n⚠️ REMINDER: Some images were Git LFS pointers, not actual images.")
+            print("To get the actual images, run: git lfs pull")
     else:
         print("Both services are required unless --allow-single-service is specified.")
         print("Run with --allow-single-service to use only the available service(s).")
+
+
+def show_lfs_instructions():
+    """Display instructions for setting up Git LFS."""
+    print("\nTo fix this issue manually, you need to:")
+    print("1. Install Git LFS if you haven't already:")
+    print("   - macOS: brew install git-lfs")
+    print("   - Windows: https://git-lfs.github.com/")
+    print("   - Linux: apt-get install git-lfs or equivalent")
+    print("2. Initialize Git LFS: git lfs install")
+    print("3. Pull the actual files: git lfs pull")
+    print("\nProceeding will likely result in errors for these files.\n")
 
 
 if __name__ == "__main__":

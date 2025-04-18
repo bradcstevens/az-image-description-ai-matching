@@ -5,7 +5,30 @@ import os
 import re
 import base64
 import datetime
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
+
+
+def is_git_lfs_pointer(file_path: str) -> bool:
+    """
+    Check if a file is a Git LFS pointer rather than actual content.
+    
+    Args:
+        file_path: Path to the file to check.
+        
+    Returns:
+        True if the file is a Git LFS pointer, False otherwise.
+    """
+    try:
+        # Check file size - Git LFS pointers are very small (typically <200 bytes)
+        if os.path.getsize(file_path) > 1000:
+            return False
+            
+        # Read the first line of the file to check for Git LFS signature
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            first_line = f.readline().strip()
+            return first_line.startswith('version https://git-lfs.github.com/spec/')
+    except Exception:
+        return False
 
 
 def load_descriptions_from_file(file_path: str) -> List[str]:
@@ -55,6 +78,10 @@ def encode_image_to_base64(image_path: str) -> str:
     Returns:
         Base64 encoded string of the image.
     """
+    # First check if this is a Git LFS pointer
+    if is_git_lfs_pointer(image_path):
+        raise ValueError("This file is a Git LFS pointer, not an actual image. Run 'git lfs pull' to download the actual images.")
+    
     try:
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode("utf-8")
@@ -95,3 +122,33 @@ def create_timestamped_directory(base_dir: str) -> str:
     ensure_directory_exists(timestamped_dir)
     
     return timestamped_dir
+
+
+def validate_image_file(image_path: str) -> Tuple[bool, str]:
+    """
+    Validate that a file is a proper image and not a Git LFS pointer.
+    
+    Args:
+        image_path: Path to the image file to validate.
+        
+    Returns:
+        A tuple of (is_valid, error_message) where is_valid is a boolean
+        indicating if the file is a valid image, and error_message is 
+        a string containing an error message if not valid, or an empty string.
+    """
+    # Check if file exists
+    if not os.path.exists(image_path):
+        return False, f"File does not exist: {image_path}"
+    
+    # Check if file is empty
+    if os.path.getsize(image_path) == 0:
+        return False, f"File is empty: {image_path}"
+    
+    # Check if file is a Git LFS pointer
+    if is_git_lfs_pointer(image_path):
+        return False, (f"File is a Git LFS pointer, not an actual image. "
+                      f"Run 'git lfs pull' to download the actual images.")
+    
+    # Additional validation could be added here (e.g., checking magic bytes for image formats)
+    
+    return True, ""

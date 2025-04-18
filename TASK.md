@@ -20,6 +20,7 @@
 - [x] Optimize project structure
 - [x] Add CLI arguments for customization
 - [x] Add code coverage reporting capability
+- [x] Add Git LFS pointer detection with automatic pull functionality and better error handling
 
 ### Pending
 
@@ -38,3 +39,4 @@
 - [ ] Need to handle image rotation and normalization
 - [ ] Consider implementing a pluggable architecture for more AI services
 - [ ] Add support for custom prompt templates
+- [x] Handle Git LFS pointer files - Added detection, automatic Git LFS pull, and user-friendly error messages for Git LFS pointer files that appear when the actual image content hasn't been downloaded (2024-04-18)
